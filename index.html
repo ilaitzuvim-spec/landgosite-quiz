@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>אבחון ממוקד לעסק | LANDGOSITE</title>
+<!-- זמני: לא להופיע בגוגל עד אישור המנטורית. כשמפרסמים, למחוק את השורה הבאה -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="נמאס לך להסביר שוב ושוב על השירות שלך, ועדיין לא לסגור מספיק לקוחות? באבחון ממוקד נבדוק מה עוצר את המתעניינים שלך.">
+<link rel="icon" href="favicon-go.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="a11y-widget.css?v=20260923">
+<script>(function(){try{var r=localStorage.getItem('landgo_a11y_prefs_v1');if(!r)return;var d=JSON.parse(r);if(d.version!==1)return;var p=d.prefs||{};var c=document.documentElement.classList;if(p.contrast==='high')c.add('a11y-contrast-high');if(p.contrast==='invert')c.add('a11y-contrast-invert');if(p.contrast==='mono')c.add('a11y-contrast-mono');if(p.links)c.add('a11y-links');if(p.cursorBig)c.add('a11y-cursor-big');if(p.reduceMotion)c.add('a11y-reduce-motion');}catch(e){}})()</script>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f3f6f6;
+  --surface: #ffffff;
+  --text: #1d1d1f;
+  --text-muted: #5f5f66;
+  --divider: #d2d2d7;
+  --blue: #0071e3;
+  --blue-dark: #0058b3;
+  --teal: #00b894;
+  --warn: #e17055;
+  --grad: linear-gradient(100deg, var(--blue) 0%, var(--teal) 100%);
+  --teal-dark: #00796b;
+  --grad-strong: linear-gradient(100deg, var(--blue-dark) 0%, var(--teal-dark) 100%);
+  --shadow: 0 20px 40px -18px rgba(0,0,0,0.18);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Rubik', 'Segoe UI', Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  background: var(--bg-alt);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+[tabindex="-1"]:focus { outline: none; }
+
+.app {
+  max-width: 620px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+/* top bar */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0 12px;
+}
+.top img { height: 38px; width: auto; display: block; }
+.back {
+  background: none;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  padding: 8px 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  visibility: hidden;
+}
+.back.show { visibility: visible; }
+.back:hover { color: var(--text); }
+
+.progress {
+  height: 4px;
+  background: var(--divider);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.progress.show { opacity: 1; }
+.progress span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--grad);
+  border-radius: 99px;
+  transition: width .45s cubic-bezier(.2,.8,.2,1);
+}
+
+/* screens */
+.screen { flex: 1; display: flex; flex-direction: column; animation: in .45s cubic-bezier(.2,.8,.2,1); }
+@keyframes in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .screen { animation: none; }
+  .progress span, .bar i { transition: none; }
+}
+
+.eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--blue-dark);
+  margin-bottom: 10px;
+}
+h1, h2 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+h1 { font-size: clamp(32px, 8.5vw, 48px); }
+h2 { font-size: clamp(24px, 6.4vw, 32px); }
+.grad-text {
+  background: var(--grad-strong);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lead { color: var(--text-muted); font-size: 18px; margin-top: 14px; }
+.h1-sub { font-size: clamp(20px, 5.2vw, 24px); font-weight: 600; line-height: 1.35; margin-top: 14px; }
+.intro h1 { font-size: clamp(28px, 7.4vw, 42px); }
+.intro-card { text-align: center; }
+.end-logo { display: block; width: min(260px, 70%); margin: 30px auto 0; mix-blend-mode: multiply; }
+.end-logo img { display: block; width: 100%; height: auto; }
+.end-logo + .foot { margin-top: 8px; }
+.intro-card .chips { justify-content: center; }
+.hint { color: var(--text-muted); font-size: 15px; margin-top: 10px; }
+
+/* intro */
+.intro { justify-content: center; padding-bottom: 40px; }
+.intro-card {
+  background: var(--surface);
+  border-radius: 26px;
+  padding: 32px 22px;
+  box-shadow: var(--shadow);
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 26px; }
+.chip {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: var(--bg-alt);
+  color: var(--text-muted);
+}
+.checks { list-style: none; margin: 22px 0 0; display: grid; gap: 10px; }
+.checks li { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; }
+.checks li::before {
+  content: "";
+  flex: none;
+  width: 20px; height: 20px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: var(--grad);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.4 14.2-4-4 1.4-1.4 2.6 2.6 5.4-5.4 1.4 1.4-6.8 6.8z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.4 14.2-4-4 1.4-1.4 2.6 2.6 5.4-5.4 1.4 1.4-6.8 6.8z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  border-radius: 99px;
+  background: var(--grad-strong);
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 14px 24px;
+  text-decoration: none;
+  box-shadow: 0 12px 24px -12px rgba(0,113,227,.6);
+  transition: transform .15s, box-shadow .15s, opacity .15s;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 16px 28px -12px rgba(0,113,227,.7); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.small-note { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 12px; }
+
+/* question */
+.q-mirror {
+  font-size: 15px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  border-inline-start: 3px solid var(--teal);
+}
+.answers { display: grid; gap: 10px; margin-top: 24px; }
+.answer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: right;
+  background: var(--surface);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius);
+  padding: 16px 16px;
+  min-height: 64px;
+  font-size: 17px;
+  line-height: 1.4;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  transition: border-color .15s, transform .15s, background .15s;
+}
+.answer:hover { border-color: var(--blue); }
+.answer:active { transform: scale(.99); }
+.answer.picked { border-color: var(--blue); background: #eef5ff; }
+.answer .key {
+  flex: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--bg-alt);
+  color: var(--text-muted);
+}
+.answer.picked .key { background: var(--grad-strong); color: #fff; }
+.answer small { display: block; color: var(--text-muted); font-size: 14px; margin-top: 2px; }
+
+/* gate */
+.gate-card {
+  background: var(--surface);
+  border-radius: 26px;
+  padding: 28px 20px;
+  box-shadow: var(--shadow);
+}
+.ready-ring {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--grad-strong);
+  display: grid; place-items: center;
+  color: #fff;
+  font-size: 28px;
+  margin-bottom: 18px;
+}
+.field { margin-top: 16px; }
+.field label { display: block; font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+.field input {
+  width: 100%;
+  min-height: 52px;
+  border: 1.5px solid var(--divider);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 17px;
+  background: var(--bg);
+}
+.field input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(0,113,227,.12); }
+.field input[type="tel"], .field input[type="email"] { direction: ltr; text-align: right; }
+.err { color: #c0392b; font-size: 14px; margin-top: 6px; min-height: 1em; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text-muted); margin: 18px 0 20px; }
+.consent input { width: 20px; height: 20px; margin-top: 2px; flex: none; accent-color: var(--blue); }
+.consent a { color: inherit; }
+
+/* result */
+.result-hero {
+  background: var(--text);
+  color: #fff;
+  border-radius: 26px;
+  padding: 28px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.result-hero::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: -60px; top: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: var(--grad);
+  opacity: .35;
+  filter: blur(30px);
+}
+.result-hero .eyebrow { color: #7fd8c3; }
+.result-hero p { color: #c7c7cc; margin-top: 12px; position: relative; }
+.result-hero h1 { position: relative; font-size: clamp(28px, 7.5vw, 40px); }
+.verdict {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.12);
+  position: relative;
+}
+
+.block { background: var(--surface); border-radius: 22px; padding: 22px 20px; margin-top: 14px; }
+.block h3 { font-size: 19px; font-weight: 700; margin-bottom: 14px; }
+.bars { display: grid; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 96px 1fr 40px; align-items: center; gap: 10px; font-size: 15px; }
+.bar { height: 8px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--grad); transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.bar i.low { background: var(--warn); }
+.bar-num { font-size: 14px; color: var(--text-muted); direction: ltr; text-align: left; font-variant-numeric: tabular-nums; }
+
+.findings { list-style: none; display: grid; gap: 12px; }
+.findings li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; }
+.findings .n {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #fdeee9;
+  color: #a8432e;
+  font-weight: 700;
+  font-size: 14px;
+  display: grid; place-items: center;
+}
+.findings b { display: block; font-weight: 600; }
+.findings span { color: var(--text-muted); font-size: 15px; }
+
+.rec {
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box;
+}
+.rec .pkg { font-size: 26px; font-weight: 800; letter-spacing: -.01em; }
+.rec p { color: var(--text-muted); margin: 6px 0 18px; }
+.foot { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 26px; }
+.restart { background: none; border: 0; color: var(--text-muted); text-decoration: underline; font-size: 14px; margin: 14px auto 0; display: block; padding: 8px; }
+
+.q-count { font-size: 14px; color: var(--text-muted); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.intro h1 .sub-line { display: block; }
+.u-word { font-size: 40px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+.u-high { color: #d63031; }
+.u-mid { color: #e17055; }
+.u-low { color: var(--teal-dark); }
+.meter { position: relative; height: 12px; border-radius: 99px; background: linear-gradient(to left, var(--teal), #fdcb6e 55%, var(--warn)); overflow: hidden; margin: 14px 0 8px; }
+.meter i { position: absolute; top: 0; bottom: 0; inset-inline-end: 0; width: 100%; background: var(--bg-alt); transition: width 1.1s cubic-bezier(.2,.8,.2,1); }
+.meter-scale { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-muted); }
+.meter-label { margin-top: 12px; font-size: 15px; color: var(--text-muted); }
+.rm-form { display: block; width: 100%; height: 360px; border: 0; margin-top: 18px; background: transparent; }
+.got-it { text-align: center; color: var(--teal-dark); font-weight: 500; font-size: 15px; margin: 16px 0 2px; }
+/* notice bar (in page flow, never covers content) */
+.notice { background: var(--text); color: #fff; font-size: 14px; line-height: 1.5; }
+.notice[hidden] { display: none; }
+.notice-in { max-width: 620px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.notice p { flex: 1 1 200px; margin: 0; color: #f5f5f7; }
+.notice a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+.notice-btns { display: flex; gap: 8px; flex: 0 0 auto; }
+.notice button { min-height: 44px; padding: 8px 18px; border-radius: 99px; font-size: 14px; font-weight: 600; border: 1.5px solid #fff; }
+.notice .n-yes { background: #fff; color: var(--text); }
+.notice .n-no { background: transparent; color: #fff; }
+/* footer */
+.site-foot { text-align: center; color: var(--text-muted); font-size: 14px; padding: 26px 16px 32px; }
+.site-foot nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 16px; }
+.site-foot a { color: var(--blue-dark); min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; text-underline-offset: 3px; }
+.site-foot p { margin-top: 4px; }
+.skip-link { position: absolute; top: -60px; right: 16px; z-index: 1000; background: var(--blue-dark); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; }
+.skip-link:focus { top: 16px; }
+.consent-line { font-size: 14px; color: var(--text-muted); margin-top: 12px; }
+.consent-line a, .consent a { color: var(--blue-dark); }
+.top-tools { display: flex; align-items: center; gap: 6px; }
+#a11y-widget-trigger.in-header { position: static; width: 44px; height: 44px; box-shadow: none; flex: none; }
+#a11y-widget-trigger.in-header svg { width: 26px; height: 26px; }
+#a11y-widget-panel.in-header { top: 64px; bottom: auto; inset-inline-start: auto; inset-inline-end: 16px; }
+@media (max-width: 699px) {
+  .intro { justify-content: flex-start; padding-bottom: 16px; }
+  .intro-card { padding: 24px 18px; }
+  .intro .chips { margin: 16px 0 18px; }
+  .intro .h1-sub, .intro .lead { margin-top: 10px; }
+  .top { padding: 10px 0 8px; }
+  .progress { margin-bottom: 16px; }
+}
+.form-fail { margin-top: 18px; background: var(--bg-alt); border-radius: 14px; padding: 18px; display: grid; gap: 8px; text-align: center; }
+.form-fail[hidden] { display: none; }
+.form-fail span { color: var(--text-muted); font-size: 15px; }
+.form-fail .btn { margin-top: 6px; }
+.rm-form[hidden] { display: none; }
+.r-text { color: var(--text-muted); font-size: 16px; line-height: 1.7; }
+ol.findings { list-style: none; display: grid; gap: 16px; }
+.findings span { display: block; }
+.findings .fix { margin-top: 8px; color: var(--text); background: var(--bg-alt); border-radius: 10px; padding: 8px 12px; font-size: 15px; }
+.findings .fix b { display: inline; font-weight: 600; color: var(--blue-dark); }
+ul.plus { list-style: none; display: grid; gap: 10px; }
+ul.plus li { position: relative; padding-inline-start: 28px; color: var(--text-muted); font-size: 15px; }
+ul.plus li::before { content: "✓"; position: absolute; inset-inline-start: 0; top: 0; color: var(--teal-dark); font-weight: 700; }
+ol.steps { list-style: none; counter-reset: s; display: grid; gap: 12px; }
+ol.steps li { counter-increment: s; position: relative; padding-inline-start: 40px; min-height: 28px; font-size: 16px; }
+ol.steps li::before { content: counter(s); position: absolute; inset-inline-start: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--grad-strong); color: #fff; font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (min-width: 700px) {
+  .intro-card, .gate-card { padding: 44px 40px; }
+  .top { padding-top: 28px; }
+}
+</style>
+</head>
+<body>
+<a href="#view" class="skip-link">דלג לתוכן הראשי</a>
+<div class="notice" id="notice" role="region" aria-label="הודעה על אחסון בדפדפן" hidden>
+  <div class="notice-in">
+    <p>אין כאן כלי מדידה או פרסום. נשמרים בדפדפן רק נתונים הכרחיים, וטופס רב מסר עשוי לשמור עוגיות משלו. <a href="legal.html#privacy">פרטים</a></p>
+    <div class="notice-btns">
+      <button type="button" class="n-yes" id="notice-yes">אישור</button>
+      <button type="button" class="n-no" id="notice-no">דחייה</button>
+    </div>
+  </div>
+</div>
+<div class="app">
+  <header class="top">
+    <img src="logo-landgosite-sm.webp" alt="LANDGOSITE" width="400" height="100">
+    <div class="top-tools" id="top-tools">
+      <button class="back" id="back" type="button" aria-label="חזרה לשאלה הקודמת">→ חזרה</button>
+    </div>
+  </header>
+  <div class="progress" id="progress" aria-hidden="true"><span></span></div>
+  <main id="view" aria-live="polite" tabindex="-1"></main>
+</div>
+<footer class="site-foot" role="contentinfo">
+  <nav aria-label="מידע משפטי">
+    <a href="legal.html#terms">תקנון ותנאי שימוש</a>
+    <a href="legal.html#refunds">מדיניות ביטולים</a>
+    <a href="legal.html#privacy">מדיניות פרטיות</a>
+    <a href="legal.html#accessibility">הצהרת נגישות</a>
+  </nav>
+  <p>© 2026 LANDGOSITE | כל הזכויות שמורות</p>
+</footer>
+
+<script>
+/* ================= הגדרות ================= */
+const CONFIG = {
+  // דף הנחיתה שאליו מגיעים אחרי התוצאה
+  landingUrl: 'https://landgosite.com/',
+  privacyUrl: 'legal.html#privacy',
+  termsUrl: 'legal.html#terms',
+  // טופס רב מסר "שאלון אבחון - לקוחות מהשאלון" (רשימה: לקוחות מהשאלון), עטוף בקובץ form-frame.html
+  formFrame: 'form-frame.html'
+};
+
+const TOTAL = 7;
+
+/* ================= השאלות =================
+   7 שאלות בכל מסלול. שאלה 1 מפצלת: A = יש דף, N = אין דף.
+   n = כמה התשובה מעידה על צורך בדף מכירה (0-3). f = דגלים לממצאים.
+*/
+const Q = {
+  start: {
+    eyebrow: 'נתחיל פשוט',
+    text: 'יש לעסק שלך היום דף מכירה?',
+    answers: [
+      { t: 'כן, יש לי דף נחיתה או דף מכירה', path: 'A', n: 0, plus: 'יש לך כבר דף. לא מתחילים מאפס, ויש על מה לבנות.', next: 'a_feel' },
+      { t: 'יש לי אתר, אבל לא דף שמוכר', path: 'N', n: 2, f: ['siteIdle'], next: 'n_price' },
+      { t: 'לא. הכל עובד דרך אינסטגרם, פייסבוק או וואטסאפ', path: 'N', n: 3, next: 'n_price' },
+      { t: 'התחלתי לבנות ונתקעתי', path: 'N', n: 3, f: ['stuck'], next: 'n_price' }
+    ]
+  },
+
+  /* ---------- מסלול A: יש דף ---------- */
+  a_feel: {
+    eyebrow: 'רגע של כנות',
+    text: 'כשאתה שולח למישהו את הקישור לדף שלך, מה אתה מרגיש?',
+    answers: [
+      { t: 'גאווה. זה בדיוק אני', n: 0, plus: 'אתה גאה בדף ושולח אותו בביטחון. לקוחות מרגישים את זה.', next: 'a_after' },
+      { t: 'קצת מתנצל: "זה עוד לא מעודכן..."', n: 2, f: ['ashamed'], next: 'a_after' },
+      { t: 'מעדיף להסביר בעצמי בוואטסאפ', n: 3, f: ['explainSelf'], next: 'a_after' },
+      { t: 'האמת? כמעט לא שולח אותו', n: 3, f: ['ashamed'], next: 'a_after' }
+    ]
+  },
+  a_after: {
+    eyebrow: 'מה קורה אחרי',
+    text: 'מה קורה בדרך כלל אחרי שמישהו קורא את הדף?',
+    answers: [
+      { t: 'הוא פונה, ומגיע כבר מוכן לקנות', n: 0, plus: 'מי שקורא את הדף מגיע מוכן לקנות. החלק הכי חשוב עובד.', next: 'a_mirror' },
+      { t: 'הוא פונה ושואל שאלות שכבר כתובות בדף', n: 2, f: ['notRead'], next: 'a_mirror' },
+      { t: 'שואל "כמה זה עולה?" ונעלם', n: 3, f: ['ghost'], next: 'a_mirror' },
+      { t: 'כמעט אף אחד לא פונה', n: 3, f: ['silent'], next: 'a_mirror' }
+    ]
+  },
+  a_mirror: {
+    eyebrow: 'תחליף כיסא',
+    text: 'דמיין שאתה לקוח שלא מכיר אותך, ונכנס לדף מהטלפון. היית קונה מעצמך?',
+    answers: [
+      { t: 'כן, בלי לחשוב פעמיים', n: 0, plus: 'היית קונה מעצמך. המסר והאמון כבר נמצאים בדף.', next: 'x_lost' },
+      { t: 'אולי, אחרי שהייתי מחפש המלצות', n: 2, f: ['noTrust'], next: 'x_lost' },
+      { t: 'הייתי צריך לשאול קודם כמה שאלות', n: 2, f: ['unclear'], next: 'x_lost' },
+      { t: 'בכנות? הייתי ממשיך לגלול', n: 3, f: ['noStop'], next: 'x_lost' }
+    ]
+  },
+
+  /* ---------- מסלול N: אין דף ---------- */
+  n_price: {
+    eyebrow: 'רגע מוכר',
+    text: 'מישהו כותב לך: "היי, כמה זה עולה?" מה עובר לך בראש?',
+    answers: [
+      { t: 'יופי, עוד לקוח', n: 1, plus: 'אתה שמח לכל פנייה. האנרגיה הזאת עוברת ללקוח.', next: 'n_repeat' },
+      { t: 'אוף, שוב להסביר הכל מההתחלה', n: 3, f: ['explainSelf'], next: 'n_repeat' },
+      { t: 'חשש. אם אגיד מחיר, הוא ייעלם', n: 3, f: ['ghost'], next: 'n_repeat' },
+      { t: 'מתי אני אספיק לענות על זה?', n: 2, f: ['noTime'], next: 'n_repeat' }
+    ]
+  },
+  n_repeat: {
+    eyebrow: 'הזמן שלך',
+    text: 'כמה פעמים בשבוע אתה מסביר את אותו הדבר מחדש ללקוח חדש?',
+    answers: [
+      { t: 'פעם-פעמיים', n: 0, plus: 'אתה לא שוחק את עצמך בהסברים חוזרים.', next: 'n_rival' },
+      { t: '3 עד 10 פעמים', n: 2, f: ['repeat'], next: 'n_rival' },
+      { t: 'יותר מ-10', n: 3, f: ['repeat'], next: 'n_rival' },
+      { t: 'לא סופר. זה כל הזמן', n: 3, f: ['repeat'], next: 'n_rival' }
+    ]
+  },
+  n_rival: {
+    eyebrow: 'השוואה',
+    text: 'יצא לך לראות מתחרה עם דף מקצועי ולחשוב: "אני טוב ממנו, אבל הוא נראה יותר רציני"?',
+    answers: [
+      { t: 'כן, וזה מתסכל אותי', n: 3, f: ['rival'], next: 'x_lost' },
+      { t: 'כן, קרה כמה פעמים', n: 2, f: ['rival'], next: 'x_lost' },
+      { t: 'לא ממש שמתי לב', n: 1, next: 'x_lost' },
+      { t: 'אין לי מתחרים כאלה', n: 0, plus: 'אין מתחרה בולט עם דף מקצועי. מי שיעלה דף טוב ראשון, יבלוט.', next: 'x_lost' }
+    ]
+  },
+
+  /* ---------- משותף ---------- */
+  x_lost: {
+    eyebrow: 'הלקוחות השקטים',
+    text: 'כמה לקוחות לדעתך הלכו בחודש האחרון בלי שבכלל ידעת שהם התעניינו?',
+    hint: 'אלה שנכנסו, הסתכלו, התלבטו, ולא כתבו.',
+    answers: [
+      { t: 'אף אחד. אני תופס את כולם', n: 0, plus: 'אתה מרגיש שאתה תופס את רוב מי שמתעניין.', next: 'x_want' },
+      { t: 'אחד או שניים', n: 1, f: ['lostFew'], next: 'x_want' },
+      { t: 'כנראה לא מעט', n: 3, f: ['lostMany'], next: 'x_want' },
+      { t: 'אני לא בטוח שאני רוצה לדעת', n: 3, f: ['lostMany'], next: 'x_want' }
+    ]
+  },
+  x_want: {
+    eyebrow: 'מה אתה באמת רוצה',
+    text: 'אם היה לך דף שעובד בשבילך 24/7, מה הכי היית רוצה שיקרה?',
+    answers: [
+      { t: 'להתעורר בבוקר לפניות שהגיעו בלילה', v: 'פניות שמגיעות גם בלילה', n: 1, next: 'x_future' },
+      { t: 'להפסיק להסביר ולהתחיל לסגור', v: 'להפסיק להסביר ולהתחיל לסגור', n: 1, next: 'x_future' },
+      { t: 'שיבינו כמה אני שווה לפני שמדברים על מחיר', v: 'שיבינו את הערך לפני המחיר', n: 1, next: 'x_future' },
+      { t: 'להיראות מקצועי כמו שאני באמת', v: 'להיראות מקצועי כמו שאני באמת', n: 1, next: 'x_future' }
+    ]
+  },
+  x_future: {
+    eyebrow: 'שאלה אחרונה',
+    text: 'אם בעוד חצי שנה הכל נשאר בדיוק כמו היום, איך זה מרגיש?',
+    answers: [
+      { t: 'בסדר, אני מסתדר', n: 0, plus: 'אין לחץ. אפשר לשפר בקצב שלך, בלי להחליט מתוך מצוקה.', f: ['cold'], next: 'GATE' },
+      { t: 'מתסכל, אבל אסתדר', n: 2, f: ['warm'], next: 'GATE' },
+      { t: 'לא אפשרי. משהו חייב להשתנות', n: 3, f: ['hot'], next: 'GATE' },
+      { t: 'אני כבר מחפש פתרון', n: 3, f: ['hot'], next: 'GATE' }
+    ]
+  }
+};
+
+/* ================= ממצאים ================= */
+const FINDINGS = {
+  noStop:      ['הדף לא עוצר את מי שנכנס', 'אם אתה בעצמך היית ממשיך לגלול, הלקוחות שלך עושים בדיוק את זה. בשקט, בלי להגיד לך. יש לדף בערך 3 שניות במסך הראשון בטלפון.', 'כותרת שאומרת מה הלקוח מקבל, בשורה אחת, במסך הראשון בטלפון. לא לוגו, לא "ברוכים הבאים" ולא תמונה בלי טקסט.'],
+  silent:      ['הדף שותק', 'אנשים נכנסים, קוראים ויוצאים. יש עניין בשירות, אבל משהו בדרך בין "מעניין" ל"אני רוצה" נשבר.', 'לבקש מ-3 אנשים שלא מכירים אותך לעבור על הדף בטלפון, ולשאול: איפה עצרתם, ומה היה חסר לכם כדי לפנות.'],
+  ghost:       ['המחיר מגיע לפני הערך', 'כשהלקוח שומע מחיר לפני שהבין כמה זה שווה לו, כל מחיר נשמע יקר. הוא לא נעלם כי יקר לו, אלא כי עוד לא השתכנע.', 'לפני שמדברים על מחיר: מה הלקוח מקבל, למי זה מתאים, ותוצאה של מישהו שכבר עבד איתך. רק אז המחיר.'],
+  lostMany:    ['לקוחות הולכים בשקט', 'על כל אחד שכותב לך, יש כמה שהתעניינו והלכו כי לא מצאו תשובה לשאלה שלהם. אתה פשוט לא רואה אותם.', 'מקום אחד שעונה על 5 השאלות הכי נפוצות, עם כפתור פנייה אחד ברור, שזמין גם כשאתה לא.'],
+  explainSelf: ['כל המכירה עוברת דרכך', 'הסבר, שכנוע, מחיר, מעקב: הכל עליך. כשאתה בפגישה, בחופש או ישן, אין מי שימכור, והלקוח שכתב בינתיים פונה למישהו אחר.', 'לכתוב פעם אחת את ההסבר הכי טוב שלך, זה שעובד בשיחות, ולשים אותו בדף שאפשר לשלוח בקישור.'],
+  ashamed:     ['אתה לא גאה בדף', 'אם אתה מתנצל עליו או נמנע מלשלוח אותו, הלקוח מרגיש את זה. הדף אמור להיות הכרטיס הכי חזק שלך, לא משהו שמסתירים.', 'לזהות מה בדיוק מביך אותך: עיצוב ישן, טקסט שלא מדבר בשפה שלך, או מידע לא מעודכן. לתקן קודם את זה.'],
+  notRead:     ['הדף לא עונה על השאלות', 'כשלקוחות שואלים מה שכבר כתוב, זה סימן שהטקסט ארוך מדי, לא ברור, או לא נמצא במקום שבו הם מחפשים. הם מגיעים אליך עם ספקות במקום עם החלטה.', 'לקחת את 5 השאלות שהכי שואלים אותך, ולענות עליהן בדף בשפה של הלקוח, ממש לפני כפתור הפנייה.'],
+  noTrust:     ['אין מספיק סיבות לסמוך', 'לקוח שצריך לחפש המלצות במקום אחר כבר חצי בחוץ. רוב האנשים לא יחפשו, הם פשוט ימשיכו הלאה.', 'להוסיף 3 המלצות אמיתיות עם שם ותמונה או צילום מסך, ולשים אותן ליד הכפתור, לא בתחתית הדף.'],
+  unclear:     ['לא ברור מה מקבלים', 'אם צריך לשאול לפני שמחליטים, הדף לא עשה את העבודה. לקוח מבולבל לא קונה, הוא דוחה ל"אחר כך".', 'משפט אחד בראש הדף: מה אתה עושה, למי, ומה התוצאה. אם צריך יותר ממשפט כדי להסביר, זה עוד לא ברור.'],
+  repeat:      ['אותו הסבר, שוב ושוב', 'כמה פעמים בשבוע של אותו הסבר מצטברות לשעות בחודש. שעות שיכלו להיות עבודה בתשלום, או מנוחה.', 'לרכז את ההסבר בדף אחד, ולענות לפניות חדשות בקישור לדף במקום בהודעה ארוכה.'],
+  rival:       ['פחות טובים ממך נראים יותר רציניים', 'לקוח שלא מכיר אף אחד מכם בוחר לפי מה שהוא רואה. כרגע הוא רואה אותם, לא את הרמה האמיתית שלך.', 'דף שמשקף את מה שאתה באמת יודע לעשות: עבודות, המלצות ותהליך עבודה ברור, במקום אחד.'],
+  noTime:      ['אין לך זמן לענות לכולם', 'כל הודעה שמחכה כמה שעות היא לקוח שבינתיים כתב גם למתחרה. המהיר לענות הוא לא תמיד הטוב, אבל הוא זה שסוגר.', 'דף עם טופס או כפתור וואטסאפ שאוסף את הפנייה עם כל הפרטים, כך שתענה כשנוח לך בלי לאבד אותה.'],
+  siteIdle:    ['יש אתר, אין איש מכירות', 'אתר שמציג אותך הוא כרטיס ביקור. מי שמגיע מפוסט או ממודעה על שירות אחד הולך בו לאיבוד.', 'דף ייעודי לשירות המרכזי, עם מטרה אחת, שאליו שולחים מכל פוסט, סטורי ומודעה.'],
+  stuck:       ['הדף תקוע', 'כל חודש שהדף נדחה הוא עוד חודש של הסברים בוואטסאפ, ולקוחות שהולכים בלי שתדע.', 'לפרק את זה: קודם הטקסט, מה אומרים, ורק אחר כך העיצוב. או להעביר את זה למי שעושה את זה כל יום.'],
+  lostFew:     ['גם אחד-שניים זה הרבה', 'לקוח אחד בחודש שהלך זה 12 בשנה. כדאי לחשב כמה זה שווה בכסף.', 'להוסיף דרך פשוטה להשאיר פרטים גם למי שעוד לא מוכן לדבר, כדי שתוכל לחזור אליו.']
+};
+const MAX_FINDINGS = 4;
+const PRIORITY = ['noStop', 'lostMany', 'silent', 'ghost', 'explainSelf', 'rival', 'ashamed', 'notRead', 'noTrust', 'unclear', 'repeat', 'noTime', 'stuck', 'siteIdle', 'lostFew'];
+
+/* ================= מצב ================= */
+let state;
+function reset() { state = { node: null, history: [], picks: {}, path: null, lead: null }; }
+reset();
+
+const view = document.getElementById('view');
+const backBtn = document.getElementById('back');
+const progressWrap = document.getElementById('progress');
+const progressBar = progressWrap.querySelector('span');
+
+function setProgress() {
+  const inQ = !!Q[state.node];
+  const full = state.node === 'GATE' || state.node === 'RESULT';
+  progressWrap.classList.toggle('show', inQ || full);
+  progressBar.style.width = full ? '100%' : inQ ? Math.max(4, state.history.length / TOTAL * 100) + '%' : '0';
+}
+
+/* ================= מסכים ================= */
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+function render(html, focusSel) {
+  view.innerHTML = `<section class="screen">${html}</section>`;
+  backBtn.classList.toggle('show', state.history.length > 0 && state.node !== 'RESULT');
+  setProgress();
+  window.scrollTo(0, 0);
+  const el = focusSel && view.querySelector(focusSel);
+  if (el) el.focus({ preventScroll: true });
+}
+
+function showIntro() {
+  state.node = null;
+  render(`
+    <div class="intro">
+      <div class="intro-card">
+        <div class="eyebrow">בדיקה אישית · פחות מ-2 דקות</div>
+        <h1 tabindex="-1">נמאס לך להסביר שוב ושוב על השירות שלך, ועדיין לא לסגור מספיק לקוחות?</h1>
+        <p class="h1-sub">הגיע הזמן לגלות מה גורם למתעניינים שלך <span class="grad-text">לא להפוך ללקוחות משלמים</span>.</p>
+        <p class="lead">באבחון ממוקד נבדוק מה עלול לעצור את הלקוחות בדרך לפנייה, ואיך אפשר לשפר את הדרך שבה העסק שלך מציג את עצמו.</p>
+        <div class="chips"><span class="chip">7 שאלות</span><span class="chip">כ-2 דקות</span><span class="chip">תוצאה אישית מיד</span></div>
+        <button class="btn" type="button" id="go">בוא נבדוק ←</button>
+      </div>
+    </div>`, 'h1');
+  document.getElementById('go').onclick = () => go('start');
+}
+
+function go(id) {
+  state.node = id;
+  if (id === 'GATE') return showGate();
+  const q = Q[id];
+  const prev = state.picks[id];
+  const mirror = mirrorLine(id);
+  render(`
+    ${mirror ? `<div class="q-mirror">${esc(mirror)}</div>` : ''}
+    <div class="q-count">שאלה ${state.history.length + 1} מתוך ${TOTAL}</div>
+    <div class="eyebrow">${esc(q.eyebrow)}</div>
+    <h2 tabindex="-1">${esc(q.text)}</h2>
+    ${q.hint ? `<p class="hint">${esc(q.hint)}</p>` : ''}
+    <div class="answers" role="group" aria-label="${esc(q.text)}">
+      ${q.answers.map((a, i) => `
+        <button type="button" class="answer${prev === i ? ' picked' : ''}" data-i="${i}">
+          <span class="key" aria-hidden="true">${'אבגד'[i]}</span>
+          <span>${esc(a.t)}</span>
+        </button>`).join('')}
+    </div>`, 'h2');
+  view.querySelectorAll('.answer').forEach(b => b.onclick = () => pick(id, +b.dataset.i, b));
+}
+
+/* משפט קצר שמראה שהשאלון הקשיב לתשובה הקודמת */
+function mirrorLine(id) {
+  const p = state.picks;
+  if (id === 'a_after' && (p.a_feel === 1 || p.a_feel === 3)) return 'תחושה מוכרת. רוב בעלי העסקים מרגישים ככה לגבי הדף שלהם, ולא מדברים על זה.';
+  if (id === 'a_after' && p.a_feel === 2) return 'כלומר, בפועל אתה עושה את העבודה שהדף היה אמור לעשות.';
+  if (id === 'a_mirror' && p.a_after === 2) return '"כמה זה עולה?" ונעלם. זה בדרך כלל אומר שהמחיר הגיע לפני שהערך נבנה.';
+  if (id === 'a_mirror' && p.a_after === 3) return 'שקט הוא לא סימן שאין עניין. הוא סימן שמשהו בדף לא עובד.';
+  if (id === 'n_repeat' && p.n_price === 2) return 'החשש הזה אומר הרבה. נחזור אליו בתוצאה.';
+  if (id === 'n_repeat' && p.n_price === 1) return 'עכשיו תכפיל את זה בכל פנייה.';
+  if (id === 'n_rival' && p.n_repeat >= 2) return 'זה הרבה שעות בחודש, רק על הסברים.';
+  if (id === 'x_want' && p.x_lost >= 2) return 'זו תשובה אמיצה. רוב האנשים לא מודים בזה.';
+  return '';
+}
+
+function pick(id, i, btn) {
+  view.querySelectorAll('.answer').forEach(b => b.classList.remove('picked'));
+  btn.classList.add('picked');
+  state.picks[id] = i;
+  const a = Q[id].answers[i];
+  if (a.path) state.path = a.path;
+  setTimeout(() => { state.history.push(id); go(a.next); }, 220);
+}
+
+backBtn.onclick = () => {
+  if (!state.history.length) return;
+  const prev = state.history.pop();
+  Object.keys(state.picks).forEach(k => { if (k !== prev && !state.history.includes(k)) delete state.picks[k]; });
+  go(prev);
+};
+
+/* ================= ניקוד ופרופיל ================= */
+function compute() {
+  const flags = new Set();
+  let need = 0, max = 0;
+  const answers = [];
+  state.history.forEach(id => {
+    const q = Q[id];
+    const a = q.answers[state.picks[id]];
+    answers.push([q.text, a.t]);
+    (a.f || []).forEach(f => flags.add(f));
+    need += a.n || 0;
+    max += Math.max(...q.answers.map(x => x.n || 0));
+  });
+  const score = Math.round(need / (max || 1) * 100);
+  const want = state.picks.x_want != null ? Q.x_want.answers[state.picks.x_want].v : '';
+  return { flags, score, answers, want };
+}
+
+const PROFILES = {
+  a_good: {
+    title: 'הדף שלך עובד. אפשר לחדד אותו',
+    verdict: 'לא צריך דף חדש',
+    text: 'הדף מביא פניות ואתה גאה בו. אין סיבה להחליף אותו. כמה שינויים קטנים יכולים להביא ממנו עוד יותר פניות.',
+    more: "דף שעובד הוא נכס, ולא כדאי לפרק אותו. אבל \"עובד\" זה לא \"ממצה\". ברוב הדפים שמביאים פניות יש עוד 2-3 נקודות שעוצרות חלק מהגולשים, בעיקר כאלה שלא הכירו אותך קודם.",
+    steps: ["לבדוק שהכותרת עוצרת גם את מי שלא מכיר אותך ולא הגיע מהמלצה.", "להעביר את ההמלצה הכי חזקה שלך ממש ליד כפתור הפנייה.", "להוסיף משפט שעונה על \"למה עכשיו ולא בעוד חודש\"."]
+  },
+  a_weak: {
+    title: 'הדף שלך לא מוכר',
+    verdict: 'הדף צריך שכתוב',
+    text: 'הלקוחות עדיין מגיעים אליך עם שאלות וחששות, במקום עם החלטה לקנות. הדף מציג את העסק, אבל לא משכנע.',
+    more: "יש לך דף, וזה טוב. הבעיה היא לא שהוא קיים, אלא מה שהוא אומר וסדר הדברים בו. דף מכירה צריך להוביל את הלקוח בדרך מסוימת: לעצור אותו, לסקרן, להסביר, לגרום לו לרצות, לבנות אמון, ורק אז לבקש ממנו לפעול. כשאחד השלבים חסר, הלקוח נתקע ופונה אליך עם שאלות, או הולך.",
+    steps: ["לשכתב את הכותרת והפתיחה כך שידברו על הבעיה והתוצאה של הלקוח, לא עליך.", "להוסיף מענה לחששות הנפוצים (\"זה יתאים לי?\", \"זה שווה את הכסף?\") לפני הכפתור.", "לסדר את הדף מחדש לפי השלבים: לעצור, לסקרן, להסביר, לגרום לרצות, לבנות אמון, להניע לפעולה."]
+  },
+  a_losing: {
+    title: 'הדף שלך מבריח לקוחות',
+    verdict: 'צריך דף מכירה חדש, עכשיו',
+    text: 'אנשים נכנסים לדף, מתלבטים ויוצאים בלי לפנות. אתה לא יודע שהם היו שם. כל יום שהדף נשאר ככה, עוד לקוחות הולכים.',
+    more: "לפי התשובות שלך, הדף הנוכחי לא רק \"לא עוזר\", הוא גורם לאנשים להתלבט ולעזוב. במצב כזה תיקונים קטנים בדרך כלל לא מספיקים, כי הבעיה היא במבנה ובמסר עצמו. מה שצריך הוא דף שנבנה מההתחלה כדי למכור.",
+    steps: ["לא לשפץ, לבנות דף מכירה חדש לפי שיטה מסודרת.", "קופי שמדבר על הבעיה של הלקוח ועל התוצאה שהוא רוצה, ומוריד את החששות לפני המחיר.", "המלצות אמיתיות, תשובות לשאלות נפוצות, וכפתור פנייה אחד ברור."]
+  },
+  n_ok: {
+    title: 'העסק מסתדר, אבל הכל תלוי בך',
+    verdict: 'דף מכירה יחסוך לך זמן',
+    text: 'העסק עובד גם בלי דף. אבל כל לקוח חדש צריך לקבל ממך הסבר, וכשאתה לא זמין, אין מי שימכור.',
+    more: "זה מצב טוב להתחיל ממנו: יש לך לקוחות, ואתה לא בלחץ. אבל העסק תלוי בזמינות שלך. דף מכירה לא מחליף אותך, הוא עושה את ההסבר הראשון במקומך, ושולח אליך אנשים שכבר יודעים מה הם רוצים.",
+    steps: ["לכתוב פעם אחת את ההסבר הכי טוב שלך על השירות.", "להעלות דף נחיתה פשוט עם כפתור וואטסאפ וטופס השארת פרטים.", "לשלוח קישור לדף בכל פנייה חדשה, במקום להסביר מההתחלה."]
+  },
+  n_you: {
+    title: 'העסק שלך מפסיד לקוחות כי אין לו דף מכירה',
+    verdict: 'צריך דף מכירה, עכשיו',
+    text: 'היום אתה עושה לבד את כל העבודה של המכירה: מסביר, משכנע, שולח מחיר ורודף אחרי תשובה. וכשאתה לא עונה מיד, הלקוח הולך. דף מכירה עושה את כל זה בשבילך, 24/7.',
+    more: "כשאין מקום אחד שמסביר את השירות, כל פנייה מתחילה מאפס. חלק מהלקוחות מחכים לתשובה, חלק שואלים \"כמה זה עולה?\" ונעלמים, וחלק פשוט לא כותבים. דף מכירה עונה על השאלות שלהם, מוריד את החששות, ומביא אליך פניות של אנשים שכבר רוצים.",
+    steps: ["דף מכירה אחד לשירות המרכזי שלך, לא אתר עם עשרה עמודים.", "קופי שעונה על השאלות הנפוצות ומוריד חששות, לפני שמגיעים למחיר.", "לשלוח אליו מכל פוסט, סטורי ופנייה בוואטסאפ."]
+  }
+};
+
+function urgencyKey(score) { return score >= 65 ? 'high' : score >= 35 ? 'mid' : 'low'; }
+
+/* רמת דחיפות: מה שמוצג בגדול במקום מספר */
+function urgency(score) {
+  if (score >= 65) return { word: 'דחוף', cls: 'u-high', note: 'אתה מאבד לקוחות כבר עכשיו. כדאי לטפל בזה בהקדם.' };
+  if (score >= 35) return { word: 'חשוב', cls: 'u-mid', note: 'יש לקוחות שהולכים. זה הזמן לתקן, לפני שזה גדל.' };
+  return { word: 'לא דחוף', cls: 'u-low', note: 'המצב טוב. יש מקום לשיפורים קטנים.' };
+}
+
+function profileKey(r) {
+  const s = r.score;
+  if (state.path === 'A') return s < 30 ? 'a_good' : s < 65 ? 'a_weak' : 'a_losing';
+  return s < 35 ? 'n_ok' : 'n_you';
+}
+
+/* שמירת התוצאה, כדי שאחרי הטופס של רב מסר (שמעביר לדף תודה) נוכל להציג אותה */
+const STORE = 'landgo-quiz-result';
+let lastResult = null;
+function saveResult(data) { lastResult = data; try { sessionStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} }
+function loadResult() { try { return JSON.parse(sessionStorage.getItem(STORE) || 'null') || lastResult; } catch (e) { return lastResult; } }
+
+/* ================= מסך פרטים ================= */
+function showGate() {
+  state.node = 'GATE';
+  const r = compute();
+  const key = profileKey(r);
+  const found = PRIORITY.filter(k => r.flags.has(k)).slice(0, MAX_FINDINGS);
+  const plus = state.history.map(id => Q[id].answers[state.picks[id]].plus).filter(Boolean).slice(0, 3);
+  saveResult({ key, score: r.score, found, plus });
+
+  render(`
+    <div class="gate-card">
+      <div class="ready-ring" aria-hidden="true">✓</div>
+      <div class="eyebrow">האבחון שלך מוכן</div>
+      <h2 tabindex="-1">רגע לפני שרואים אותו</h2>
+      <p class="hint">משאירים שם, מייל וטלפון, והאבחון המלא מופיע מיד: מה עוצר את הלקוחות שלך, ומה לעשות עם זה.</p>
+      <iframe class="rm-form" id="rm-form" title="טופס השארת פרטים" src="${esc(CONFIG.formFrame)}"></iframe>
+      <div class="form-fail" id="form-fail" role="alert" hidden>
+        <b>הטופס לא נטען</b>
+        <span>זה קורה לפעמים בגלל חיבור איטי או חוסם פרסומות. נסו לטעון שוב.</span>
+        <button type="button" class="btn" id="form-retry">לטעון את הטופס שוב</button>
+      </div>
+      <p class="consent-line">בשליחת הטופס אני מאשר/ת את <a href="${esc(CONFIG.termsUrl)}" target="_blank" rel="noopener">התקנון</a> ואת <a href="${esc(CONFIG.privacyUrl)}" target="_blank" rel="noopener">מדיניות הפרטיות</a>, ומסכים/ה ש-LANDGOSITE תיצור איתי קשר בנוגע לתוצאה.</p>
+    </div>`, 'h2');
+
+  // הטופס נטען פעם אחת. טעינה נוספת של המסגרת = הטופס נשלח, ורב מסר עבר לדף התודה
+  const frame = document.getElementById('rm-form');
+  let loads = 0;
+  const fit = () => {
+    try {
+      const d = frame.contentDocument;
+      if (d && d.body) frame.style.height = Math.max(260, d.documentElement.scrollHeight) + 'px';
+    } catch (e) {}
+  };
+  // אם אחרי כמה שניות אין שדות בטופס, מציגים הודעה במקום שטח ריק
+  const fail = document.getElementById('form-fail');
+  const hasForm = () => {
+    try { return !!frame.contentDocument.querySelector('input[type="text"], input[type="email"], input[type="tel"]'); }
+    catch (e) { return true; } // אין גישה למסגרת: לא מסתירים אותה
+  };
+  const check = () => {
+    if (state.node !== 'GATE' || loads !== 1) return;
+    const ok = hasForm();
+    fail.hidden = ok;
+    frame.hidden = !ok;
+  };
+  document.getElementById('form-retry').onclick = () => {
+    loads = 0; fail.hidden = true; frame.hidden = false;
+    frame.src = CONFIG.formFrame + '?r=' + Date.now();
+  };
+  frame.addEventListener('load', () => {
+    loads++;
+    if (loads === 1) { fit(); [300, 900, 2000].forEach(t => setTimeout(fit, t)); setTimeout(check, 6000); return; }
+    if (state.node === 'GATE') showResult(loadResult());
+  });
+}
+
+/* ================= מסך תוצאה ================= */
+function showResult(saved) {
+  state.node = 'RESULT';
+  state.history = [];
+  const p = PROFILES[saved.key] || {
+    title: 'תודה! הפרטים התקבלו',
+    verdict: 'נחזור אליך בהקדם',
+    text: 'בינתיים, אפשר לראות איך נראה דף מכירה שעובד בשבילך 24/7.'
+  };
+  const u = saved.score == null ? null : urgency(saved.score);
+  const found = (saved.found || []).filter(k => FINDINGS[k]);
+  const plus = saved.plus || [];
+  const land = CONFIG.landingUrl + (CONFIG.landingUrl.includes('?') ? '&' : '?') + 'utm_source=quiz&utm_medium=result&utm_campaign=' + (saved.key || 'quiz');
+
+  render(`
+    <div class="result-hero">
+      <div class="eyebrow">התוצאה שלך</div>
+      <h1 tabindex="-1">${esc(p.title)}</h1>
+      <p>${esc(p.text)}</p>
+      <span class="verdict">${esc(p.verdict)}</span>
+    </div>
+
+    ${saved.score == null ? '' : `<div class="block">
+      <h3>רמת הדחיפות לדף מכירה</h3>
+      <div class="u-word ${u.cls}">${esc(u.word)}</div>
+      <div class="meter" role="img" aria-label="רמת דחיפות: ${esc(u.word)}"><i data-w="${100 - saved.score}"></i></div>
+      <div class="meter-scale"><span>לא דחוף</span><span>דחוף מאוד</span></div>
+      <p class="meter-label">${esc(u.note)}</p>
+    </div>`}
+
+    ${p.more ? `<div class="block">
+      <h3>מה זה אומר</h3>
+      <p class="r-text">${esc(p.more)}</p>
+    </div>` : ''}
+
+    ${found.length ? `<div class="block">
+      <h3>${found.length === 1 ? 'מה עוצר את הלקוחות שלך' : `${found.length} דברים שעוצרים את הלקוחות שלך`}</h3>
+      <ol class="findings">
+        ${found.map((k, i) => `<li><span class="n" aria-hidden="true">${i + 1}</span><div><b>${esc(FINDINGS[k][0])}</b><span>${esc(FINDINGS[k][1])}</span><span class="fix"><b>מה עושים:</b> ${esc(FINDINGS[k][2])}</span></div></li>`).join('')}
+      </ol>
+    </div>` : ''}
+
+    ${plus.length ? `<div class="block">
+      <h3>מה כבר עובד לך</h3>
+      <ul class="plus">${plus.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+    </div>` : ''}
+
+    ${p.steps ? `<div class="block">
+      <h3>מה הייתי עושה עכשיו</h3>
+      <ol class="steps">${p.steps.map(t => `<li>${esc(t)}</li>`).join('')}</ol>
+    </div>` : ''}
+
+    <p class="got-it">✓ הפרטים שלך התקבלו. נחזור אליך בהקדם.</p>
+
+    <div class="block rec">
+      <div class="eyebrow">הצעד הבא</div>
+      <div class="pkg">ככה נראה דף שמוכר</div>
+      <p>דף שעונה על השאלות, מוריד את החששות, וגורם ללקוח להבין: "אני רוצה את זה". בנוי לפי שיטת 11 נקודות ההמרה של LANDGOSITE.</p>
+      <a class="btn" href="${esc(land)}">לראות איך זה עובד ←</a>
+    </div>
+
+    <button class="restart" type="button" id="again">לעשות את הבדיקה מחדש</button>
+    <a class="end-logo" href="${esc(land)}"><img src="landgosite-logo.webp" alt="LANDGO SITE" width="2000" height="725"></a>
+    <p class="foot">BUILD · CONVERT · GROW</p>
+  `, 'h1');
+
+  setTimeout(() => {
+    view.querySelectorAll('.meter i').forEach(i => i.style.width = i.dataset.w + '%');
+  }, 60);
+  document.getElementById('again').onclick = () => {
+    try { sessionStorage.removeItem(STORE); } catch (e) {}
+    history.replaceState(null, '', location.pathname);
+    reset(); showIntro();
+  };
+}
+
+/* ================= הפעלה =================
+   אם בעתיד דף התודה של טופס רב מסר יוגדר לכתובת השאלון עם ?done=1,
+   התוצאה תוצג גם משם. */
+(function init() {
+  const params = new URLSearchParams(location.search);
+  const done = params.get('done');
+  if (done) {
+    // דף התודה נטען בתוך ה-iframe של הטופס: מעבירים את כל הדף לתוצאה
+    if (window.top !== window.self) { try { window.top.location.href = location.href; return; } catch (e) {} }
+    showResult(loadResult() || { key: null, score: null, found: [] });
+    return;
+  }
+  showIntro();
+})();
+</script>
+<script>
+/* הודעת האחסון: הבחירה נשמרת בדפדפן. כל מה שנשמר הכרחי לפעולת הדף, כך שדחייה לא מוסיפה ולא מסירה כלום */
+(function () {
+  var KEY = 'landgo_notice_v1', bar = document.getElementById('notice');
+  var seen = null;
+  try { seen = localStorage.getItem(KEY); } catch (e) {}
+  if (seen) return;
+  bar.hidden = false;
+  function close(v) { try { localStorage.setItem(KEY, v); } catch (e) {} bar.hidden = true; }
+  document.getElementById('notice-yes').onclick = function () { close('accepted'); };
+  document.getElementById('notice-no').onclick = function () { close('declined'); };
+})();
+</script>
+<script src="a11y-widget.js?v=20260923" defer></script>
+<script>
+/* כפתור הנגישות עובר לראש הדף, כדי שלא יכסה את כפתורי השאלון */
+document.addEventListener('DOMContentLoaded', function () {
+  var t = document.getElementById('a11y-widget-trigger'), p = document.getElementById('a11y-widget-panel');
+  if (!t) return;
+  t.classList.add('in-header'); if (p) p.classList.add('in-header');
+  document.getElementById('top-tools').appendChild(t);
+});
+</script>
+</body>
+</html>

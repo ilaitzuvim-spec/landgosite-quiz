@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הדף לא נמצא | LANDGOSITE</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon-go.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="a11y-widget.css?v=20260923">
+<script>(function(){try{var r=localStorage.getItem('landgo_a11y_prefs_v1');if(!r)return;var d=JSON.parse(r);if(d.version!==1)return;var p=d.prefs||{};var c=document.documentElement.classList;if(p.contrast==='high')c.add('a11y-contrast-high');if(p.contrast==='invert')c.add('a11y-contrast-invert');if(p.contrast==='mono')c.add('a11y-contrast-mono');if(p.links)c.add('a11y-links');if(p.cursorBig)c.add('a11y-cursor-big');if(p.reduceMotion)c.add('a11y-reduce-motion');}catch(e){}})()</script>
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #1d1d1f;
+  --text-muted: #5f5f66;
+  --blue-dark: #0058b3;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; direction: rtl; }
+body { font-family: 'Rubik', 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px 22px 96px; line-height: 1.7; font-size: 17px; -webkit-font-smoothing: antialiased; }
+.brand { display: inline-flex; margin-bottom: 28px; }
+.brand img { height: 30px; width: auto; display: block; }
+main { display: flex; flex-direction: column; align-items: center; }
+.code { font-size: clamp(64px, 14vw, 96px); font-weight: 900; line-height: 1; color: var(--blue-dark); }
+h1 { font-size: clamp(22px, 4.5vw, 30px); font-weight: 800; margin: 12px 0 10px; text-wrap: balance; }
+p { color: var(--text-muted); max-width: 440px; margin-bottom: 28px; text-wrap: pretty; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 14px 36px; border-radius: 980px; background: var(--blue-dark); color: #fff; font-weight: 600; font-size: 17px; text-decoration: none; }
+.links { margin-top: 36px; font-size: 14px; color: var(--text-muted); }
+.links a { color: var(--blue-dark); text-decoration: underline; text-underline-offset: 3px; margin: 0 8px; min-height: 44px; display: inline-flex; align-items: center; }
+a:focus-visible { outline: 3px solid var(--blue-dark); outline-offset: 3px; }
+.skip-link { position: absolute; top: -60px; right: 16px; z-index: 1000; background: var(--blue-dark); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; transition: top 0.2s ease; }
+.skip-link:focus { top: 16px; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .skip-link { transition: none; } }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+<a class="brand" href="index.html" aria-label="LANDGOSITE, לשאלון"><img src="logo-landgosite-sm.webp" alt="LANDGOSITE"></a>
+
+<main id="main-content">
+  <div class="code" aria-hidden="true">404</div>
+  <h1>הדף שחיפשת לא נמצא</h1>
+  <p>יכול להיות שהקישור השתנה, או שנפלה טעות בכתובת. בוא נחזיר אותך לשאלון.</p>
+  <a class="btn" href="index.html">חזרה לשאלון</a>
+  <p class="links"><a href="legal.html#terms">תקנון</a><a href="legal.html#refunds">ביטולים</a><a href="legal.html#privacy">פרטיות</a><a href="legal.html#accessibility">נגישות</a></p>
+</main>
+
+<script src="a11y-widget.js?v=20260923" defer></script>
+</body>
+</html>
